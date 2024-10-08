@@ -26,10 +26,6 @@ spring:
           predicates:
             - Path=/kepcos/**, 
         - id: frontend
-          uri: http://localhost:8086
-          predicates:
-            - Path=, 
-        - id: frontend
           uri: http://localhost:8080
           predicates:
             - Path=/**
@@ -69,10 +65,6 @@ spring:
           uri: http://kepco:8080
           predicates:
             - Path=/kepcos/**, 
-        - id: frontend
-          uri: http://frontend:8080
-          predicates:
-            - Path=, 
         - id: frontend
           uri: http://frontend:8080
           predicates:

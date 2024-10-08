@@ -24,7 +24,6 @@ See the README.md files inside the each microservices directory:
 - response
 - user
 - kepco
-- frontend
 
 
 ## Run API Gateway (Spring Gateway)
@@ -49,9 +48,6 @@ mvn spring-boot:run
 - kepco
 ```
  http :8088/kepcos id="id" drId="dr_id" userId="user_id" responseId="response_id" resposneAnswer="resposne_answer" adjustPoint="adjustPoint" isReal="isReal" 
-```
-- frontend
-```
 ```
 
 

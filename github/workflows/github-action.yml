@@ -33,7 +33,6 @@ jobs:
           mvn clean package -f ./response/pom.xml
           mvn clean package -f ./user/pom.xml
           mvn clean package -f ./kepco/pom.xml
-          mvn clean package -f ./frontend/pom.xml
 
       - name: Docker Build and push for Dr
         uses: docker/build-push-action@v4
@@ -74,14 +73,4 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}/kepco:latest
             ghcr.io/${{ github.repository }}/kepco:${{ github.ref_name }}
-            
-      - name: Docker Build and push for Frontend
-        uses: docker/build-push-action@v4
-        with:
-          context: ./frontend
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository }}/frontend:latest
-            ghcr.io/${{ github.repository }}/frontend:${{ github.ref_name }}
             

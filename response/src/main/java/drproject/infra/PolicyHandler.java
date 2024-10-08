@@ -33,6 +33,10 @@ public class PolicyHandler {
             "\n\n##### listener Makelist : " + dRstarted + "\n\n"
         );
 
+        // REST Request Sample
+
+        // getUserInfoService.getGetUserInfo(/** mapping value needed */);
+
         // Sample Logic //
         Response.makelist(event);
     }

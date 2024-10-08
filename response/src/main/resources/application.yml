@@ -45,6 +45,10 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
+api:
+  url: 
+    user: localhost:8084 
+    
 
 server:
   port: 8083
@@ -81,4 +85,8 @@ spring:
           destination: drproject
           contentType: application/json
 
+api:
+  url: 
+    user: user:8080 
+    
 
