@@ -1,0 +1,92 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+#<<< API Gateway / Routes
+      routes:
+        - id: dr
+          uri: http://localhost:8082
+          predicates:
+            - Path=/drs/**, 
+        - id: response
+          uri: http://localhost:8083
+          predicates:
+            - Path=/responses/**, 
+        - id: user
+          uri: http://localhost:8084
+          predicates:
+            - Path=/users/**, 
+        - id: kepco
+          uri: http://localhost:8085
+          predicates:
+            - Path=/kepcos/**, 
+        - id: frontend
+          uri: http://localhost:8086
+          predicates:
+            - Path=, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+#>>> API Gateway / Routes
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: dr
+          uri: http://dr:8080
+          predicates:
+            - Path=/drs/**, 
+        - id: response
+          uri: http://response:8080
+          predicates:
+            - Path=/responses/**, 
+        - id: user
+          uri: http://user:8080
+          predicates:
+            - Path=/users/**, 
+        - id: kepco
+          uri: http://kepco:8080
+          predicates:
+            - Path=/kepcos/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: response
+  labels:
+    app: response
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: response
