@@ -29,11 +29,22 @@ public class Dr {
 
     @PostPersist
     public void onPostPersist() {
-        DRstarted dRstarted = new DRstarted(this);
-        dRstarted.publishAfterCommit();
+        System.out.println("DR START");
 
-        DrEnded drEnded = new DrEnded(this);
-        drEnded.publishAfterCommit();
+        DRstarted dRstarted = new DRstarted(this);
+        if (this.date == null) {
+            this.date = new Date(); // 현재 날짜를 기본값으로 설정
+        }       
+        dRstarted.publishAfterCommit();
+    }
+
+    @PostUpdate
+    public void onPostUpdate() {
+        if ("end".equals(this.status)) {
+            System.out.println("Dr end");
+            DrEnded drEnded = new DrEnded(this);
+            drEnded.publishAfterCommit();
+        }
     }
 
     public static DrRepository repository() {
