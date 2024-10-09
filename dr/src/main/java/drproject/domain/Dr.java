@@ -30,6 +30,12 @@ public class Dr {
     @PostPersist
     public void onPostPersist() {
         System.out.println("DR START");
+        System.out.println("DR START");
+        System.out.println("DR START");
+        System.out.println("DR START");
+        System.out.println("DR START");
+        System.out.println("DR START");
+        System.out.println("DR START");
 
         DRstarted dRstarted = new DRstarted(this);
         if (this.date == null) {

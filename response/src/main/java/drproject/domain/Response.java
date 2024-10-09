@@ -64,7 +64,6 @@ public class Response {
         PagedModel<User> users = ResponseApplication.applicationContext
         .getBean(drproject.external.UserService.class)
         .getAllUsers();
-
             for (User user :  users.getContent()) {
  
 

@@ -19,5 +19,15 @@ public class DrController {
 
     @Autowired
     DrRepository drRepository;
+    
+    @PostMapping("/startdr")
+    public Dr startDr(@RequestBody Dr newDr) {
+        // 새로운 Dr 인스턴스를 저장하고 이벤트 발행
+        return drRepository.save(newDr);
+    }
+
+
+
+
 }
 //>>> Clean Arch / Inbound Adaptor

@@ -53,12 +53,29 @@ public class User {
         repository().save(user);
 
         */
-        // Optional<User> optionalUser = repository().findByName(reductionCheck.getUserName());
+        Optional<User> userOptional = repository().findByName(reductionCheck.getUserName());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            
+            // answer가 'accept'일 때만 포인트 조정
+            if ("accept".equals(reductionCheck.getResposneAnswer())) {
+                // adjustPoint 만큼 포인트를 증가
+                user.setPoint(user.getPoint() + reductionCheck.getAdjustPoint());
 
+                // 변경된 사용자 정보 저장
+                repository().save(user);
+
+                System.out.println("포인트 업데이트 " + user.getName() + user.getPoint());
+            }
+            else {
+                System.out.println("answer가 'accept'가 아님.");
+            }
+        } 
+    }
     
  
 
-    }
+    
     //>>> Clean Arch / Port Method
 
 }
