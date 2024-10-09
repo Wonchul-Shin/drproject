@@ -46,25 +46,22 @@ public class Kepco {
 
     //<<< Clean Arch / Port Method
     public static void checkReduction(Listsaved listsaved) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Kepco kepco = new Kepco();
-        repository().save(kepco);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(listsaved.get???()).ifPresent(kepco->{
-            
-            kepco // do something
+        if ("accept".equals(listsaved.getAnswer())) {
+            Kepco kepco = new Kepco();
+            kepco.setDrId(Long.parseLong(listsaved.getDrId()));
+            kepco.setUserId(listsaved.getUserId());
+            kepco.setUserName(listsaved.getUserName());
+            kepco.setResponseId(listsaved.getId());
+            kepco.setResposneAnswer(listsaved.getAnswer());
+    
+            kepco.setIsReal(Math.random() < 0.5);
+            double adjustmentFactor = 0.91 + (Math.random() * (1.0 - 0.91));
+            kepco.setAdjustPoint((int) (listsaved.getUserCapacity() * adjustmentFactor));
             repository().save(kepco);
-
-
-         });
-        */
-
+    
+            ReductionCheck reductionCheck = new ReductionCheck(kepco);
+            reductionCheck.publishAfterCommit();
+        }
     }
     //>>> Clean Arch / Port Method
 
