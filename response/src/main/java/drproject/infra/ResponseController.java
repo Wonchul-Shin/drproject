@@ -13,11 +13,30 @@ import org.springframework.web.bind.annotation.RestController;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/responses")
+@RequestMapping(value="/responses")
 @Transactional
 public class ResponseController {
 
     @Autowired
     ResponseRepository responseRepository;
+
+    @PutMapping("/{id}/accept")
+    public Response acceptResponse(@PathVariable Long id) {
+        return responseRepository.findById(id).map(response -> {
+            response.setAnswer("accept"); 
+            System.out.println("Setting answer to 'accept' for response ID: " + id);
+            return responseRepository.save(response);
+        }).orElseThrow(() -> new IllegalArgumentException("Invalid response ID: " + id));
+    }
+
+    @PutMapping("/{id}/deny")
+    public Response denyResponse(@PathVariable Long id) {
+        return responseRepository.findById(id).map(response -> {
+            response.setAnswer("deny"); 
+            return responseRepository.save(response);
+        }).orElseThrow(() -> new IllegalArgumentException("Invalid response ID: " + id));
+    }
+
+
 }
 //>>> Clean Arch / Inbound Adaptor

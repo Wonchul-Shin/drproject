@@ -34,15 +34,22 @@ public class Response {
     public void onPostPersist() {
         Listmade listmade = new Listmade(this);
         listmade.publishAfterCommit();
-
+        
         Listsaved listsaved = new Listsaved(this);
         listsaved.publishAfterCommit();
 
-        AcceptChosen acceptChosen = new AcceptChosen(this);
-        acceptChosen.publishAfterCommit();
+        if ("accept".equals(this.answer)) {
+            AcceptChosen acceptChosen = new AcceptChosen(this);
+            acceptChosen.publishAfterCommit();
+        }
 
-        DenyChosen denyChosen = new DenyChosen(this);
-        denyChosen.publishAfterCommit();
+        if ("deny".equals(this.answer)) {
+            DenyChosen denyChosen = new DenyChosen(this);
+            denyChosen.publishAfterCommit();       
+         }
+        
+      
+
     }
 
     public static ResponseRepository repository() {
