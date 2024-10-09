@@ -1,7 +1,7 @@
 package drproject.domain;
 
 import drproject.ResponseApplication;
-import drproject.domain.AesponseChosen;
+import drproject.domain.AcceptChosen;
 import drproject.domain.DenyChosen;
 import drproject.domain.Listmade;
 import drproject.domain.Listsaved;
@@ -38,8 +38,8 @@ public class Response {
         Listsaved listsaved = new Listsaved(this);
         listsaved.publishAfterCommit();
 
-        AesponseChosen aesponseChosen = new AesponseChosen(this);
-        aesponseChosen.publishAfterCommit();
+        AcceptChosen acceptChosen = new AcceptChosen(this);
+        acceptChosen.publishAfterCommit();
 
         DenyChosen denyChosen = new DenyChosen(this);
         denyChosen.publishAfterCommit();

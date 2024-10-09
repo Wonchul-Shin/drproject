@@ -9,7 +9,7 @@ import lombok.*;
 //<<< DDD / Domain Event
 @Data
 @ToString
-public class AesponseChosen extends AbstractEvent {
+public class AcceptChosen extends AbstractEvent {
 
     private Long id;
     private String drId;
@@ -17,11 +17,11 @@ public class AesponseChosen extends AbstractEvent {
     private String answer;
     private String userName;
 
-    public AesponseChosen(Response aggregate) {
+    public AcceptChosen(Response aggregate) {
         super(aggregate);
     }
 
-    public AesponseChosen() {
+    public AcceptChosen() {
         super();
     }
 }
