@@ -9,19 +9,11 @@
 
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-                    color="primary"
-                    text
-                    @click="withdrawPoint"
-            >
+            <v-btn color="primary" text @click="withdrawPoint">
                 WithdrawPoint
             </v-btn>
-            
-            <v-btn
-                    color="primary"
-                    text
-                    @click="close"
-            >
+
+            <v-btn color="primary" text @click="close">
                 Close
             </v-btn>
         </v-card-actions>
@@ -30,30 +22,29 @@
 </template>
 
 <script>
-   
-    export default {
-        name: 'WithdrawPointCommand',
-        components:{},
-        props: {},
-        data: () => ({
-            editMode: true,
-            value: {},
-        }),
-        created() {
-        },
-        watch: {
-        },
-        methods: {
-            withdrawPoint() {
-                this.$emit('withdrawPoint', this.value);
-            },
-            close() {
-                this.$emit('closeDialog');
-            },
-            change() {
-                this.$emit('input', this.value);
-            },
-        }
-    }
-</script>
 
+export default {
+    name: 'WithdrawPointCommand',
+    components: {},
+    props: {},
+    data: () => ({
+        editMode: true,
+        value: {},
+    }),
+    created() {
+    },
+    watch: {
+    },
+    methods: {
+        withdrawPoint() {
+            this.$emit('withdrawPoint', this.value);
+        },
+        close() {
+            this.$emit('closeDialog');
+        },
+        change() {
+            this.$emit('input', this.value);
+        },
+    }
+}
+</script>
