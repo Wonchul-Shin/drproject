@@ -24,15 +24,10 @@ public class Response {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Long userId;
-
     private String drId;
-
     private String answer;
-
     private Integer userCapacity;
-
 
     @PostPersist
     public void onPostPersist() {
@@ -65,15 +60,9 @@ public class Response {
         .getAllUsers();
 
             for (User user :  users.getContent()) {
-                System.out.println("User ID: " + user.getId());
-                System.out.println("User ID: " + user.getId());
-                System.out.println("User ID: " + user.getId());
-                System.out.println("User ID: " + user.getId());
-                System.out.println("User ID: " + user.getId());
-
                 Response response = new Response();
                 response.setDrId(String.valueOf(dRstarted.getId())); 
-                response.setUserId(user.getId()); 
+                response.setUserId(user.getId());  
                 response.setUserCapacity(user.getCapacity()); 
                 response.setAnswer("ignore");     
                 repository().save(response);
