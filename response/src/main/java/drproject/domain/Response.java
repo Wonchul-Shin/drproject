@@ -25,6 +25,7 @@ public class Response {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long userId;
+    private String userName;
     private String drId;
     private String answer;
     private Integer userCapacity;
@@ -53,16 +54,17 @@ public class Response {
 
     //<<< Clean Arch / Port Method
     public static void makelist(DRstarted dRstarted) {
-        // UserService userService = ResponseApplication.applicationContext.getBean(UserService.class);
-        // List<User> users = userService.getAllUsers();
         PagedModel<User> users = ResponseApplication.applicationContext
         .getBean(drproject.external.UserService.class)
         .getAllUsers();
 
             for (User user :  users.getContent()) {
+ 
+
                 Response response = new Response();
                 response.setDrId(String.valueOf(dRstarted.getId())); 
-                response.setUserId(user.getId());  
+                response.setUserId(user.getId());
+                response.setUserName(user.getName());
                 response.setUserCapacity(user.getCapacity()); 
                 response.setAnswer("ignore");     
                 repository().save(response);

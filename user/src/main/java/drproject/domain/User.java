@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "User_table")
@@ -17,6 +18,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("id")  // 명시적으로 id 필드를 추가
     private Long id;
 
     private String name;
