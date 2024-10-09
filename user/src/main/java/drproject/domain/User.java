@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 
 @Entity
 @Table(name = "User_table")
@@ -52,17 +53,10 @@ public class User {
         repository().save(user);
 
         */
+        // Optional<User> optionalUser = repository().findByName(reductionCheck.getUserName());
 
-        /** Example 2:  finding and process
-        
-        repository().findById(reductionCheck.get???()).ifPresent(user->{
-            
-            user // do something
-            repository().save(user);
-
-
-         });
-        */
+    
+ 
 
     }
     //>>> Clean Arch / Port Method
