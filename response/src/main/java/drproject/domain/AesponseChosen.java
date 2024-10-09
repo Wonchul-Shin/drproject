@@ -15,6 +15,7 @@ public class AesponseChosen extends AbstractEvent {
     private String drId;
     private Long userId;
     private String answer;
+    private String userName;
 
     public AesponseChosen(Response aggregate) {
         super(aggregate);

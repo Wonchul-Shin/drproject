@@ -14,4 +14,6 @@ public class DRstarted extends AbstractEvent {
     private String type;
     private String status;
     private Date date;
+    private String userName;
+
 }

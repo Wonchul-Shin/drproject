@@ -15,6 +15,7 @@ public class DenyChosen extends AbstractEvent {
     private String drId;
     private Long userId;
     private String answer;
+    private String userName;
 
     public DenyChosen(Response aggregate) {
         super(aggregate);

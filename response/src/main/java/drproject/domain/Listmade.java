@@ -13,6 +13,7 @@ public class Listmade extends AbstractEvent {
 
     private Long id;
     private String drId;
+    private String userName;
     private Long userId;
     private String answer;
 

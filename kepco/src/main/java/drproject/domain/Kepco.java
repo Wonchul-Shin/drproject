@@ -21,6 +21,7 @@ public class Kepco {
     private Long drId;
 
     private Long userId;
+    private String userName;
 
     private Long responseId;
 

@@ -75,24 +75,12 @@ public class Response {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void savelist(DrEnded drEnded) {
-        //implement business logic here:
+        List<Response> responses = repository().findByDrId(String.valueOf(drEnded.getId()));
+        for (Response response : responses) {
+            Listsaved listsaved = new Listsaved(response);
+            listsaved.publishAfterCommit(); 
+        }
 
-        /** Example 1:  new item 
-        Response response = new Response();
-        repository().save(response);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(drEnded.get???()).ifPresent(response->{
-            
-            response // do something
-            repository().save(response);
-
-
-         });
-        */
 
     }
 

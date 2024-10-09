@@ -14,6 +14,8 @@ public class ReductionCheck extends AbstractEvent {
     private Long id;
     private Long drId;
     private Long userId;
+    private String userName;
+
     private Long responseId;
     private String resposneAnswer;
     private Integer adjustPoint;
