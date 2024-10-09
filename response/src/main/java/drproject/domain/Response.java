@@ -10,6 +10,10 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 import lombok.Data;
+import drproject.external.UserService;
+import drproject.external.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.PagedModel;
 
 @Entity
 @Table(name = "Response_table")
@@ -28,6 +32,7 @@ public class Response {
     private String answer;
 
     private Integer userCapacity;
+
 
     @PostPersist
     public void onPostPersist() {
@@ -53,24 +58,26 @@ public class Response {
 
     //<<< Clean Arch / Port Method
     public static void makelist(DRstarted dRstarted) {
-        //implement business logic here:
+        // UserService userService = ResponseApplication.applicationContext.getBean(UserService.class);
+        // List<User> users = userService.getAllUsers();
+        PagedModel<User> users = ResponseApplication.applicationContext
+        .getBean(drproject.external.UserService.class)
+        .getAllUsers();
 
-        /** Example 1:  new item 
-        Response response = new Response();
-        repository().save(response);
+            for (User user :  users.getContent()) {
+                System.out.println("User ID: " + user.getId());
+                System.out.println("User ID: " + user.getId());
+                System.out.println("User ID: " + user.getId());
+                System.out.println("User ID: " + user.getId());
+                System.out.println("User ID: " + user.getId());
 
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(dRstarted.get???()).ifPresent(response->{
-            
-            response // do something
-            repository().save(response);
-
-
-         });
-        */
+                Response response = new Response();
+                response.setDrId(String.valueOf(dRstarted.getId())); 
+                response.setUserId(user.getId()); 
+                response.setUserCapacity(user.getCapacity()); 
+                response.setAnswer("ignore");     
+                repository().save(response);
+            }
 
     }
 
