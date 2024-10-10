@@ -253,15 +253,16 @@ kubectl apply -f service.yaml
 
 # Correlation
 
-## DR프로젝트에서는 DR의 상태 변화에 따라 연관된 처리들이 이루어집니다.
+### DR프로젝트에서는 DR의 상태 변화에 따라 연관된 처리들이 이루어집니다.
 
-#### 명령이 시작되면 req/res를 통해 user 정보를 받아와 response를 생성 
+#### 1.명령시작
 ![명령시작](images/code_startdr.png)
 
 #### 2 이행리스트 자동 생성 
 ![리스트 생성](images/code_reponse_list.png)
 
-drId 1로 유저수만큼 response 생성 (초기값 ignore)
+- 명령이 시작되면 req/res를 통해 user 정보를 받아와 response를 생성 
+- drId 1로 유저수만큼 response 생성 (초기값 ignore)
 
 #### 3 이행 수락 
 ![이행수락](images/code_response_accept.png)
