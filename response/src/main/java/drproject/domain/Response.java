@@ -59,14 +59,11 @@ public class Response {
         return responseRepository;
     }
 
-    //<<< Clean Arch / Port Method
     public static void makelist(DRstarted dRstarted) {
         PagedModel<User> users = ResponseApplication.applicationContext
         .getBean(drproject.external.UserService.class)
         .getAllUsers();
             for (User user :  users.getContent()) {
- 
-
                 Response response = new Response();
                 response.setDrId(String.valueOf(dRstarted.getId())); 
                 response.setUserId(user.getId());
@@ -75,23 +72,25 @@ public class Response {
                 response.setAnswer("ignore");     
                 repository().save(response);
             }
-
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
+
+
+
     public static void savelist(DrEnded drEnded) {
         List<Response> responses = repository().findByDrId(String.valueOf(drEnded.getId()));
         for (Response response : responses) {
             Listsaved listsaved = new Listsaved(response);
             listsaved.publishAfterCommit(); 
         }
-
-
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
+
+
     public static void updateResponse(ReductionCheck reductionCheck) {
         if (!reductionCheck.getIsReal()) {
             repository().findById(reductionCheck.getId()).ifPresent(response -> {
@@ -102,9 +101,7 @@ public class Response {
                 }
             });
         }
-
     }
-    //>>> Clean Arch / Port Method
 
 }
 //>>> DDD / Aggregate Root

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: response
-          image: "kxmjhwn/response:241010"
+          image: "kxmjhwn/response:20241010"
           ports:
             - containerPort: 8080
           readinessProbe:

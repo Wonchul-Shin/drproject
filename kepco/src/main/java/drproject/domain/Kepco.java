@@ -53,12 +53,7 @@ public class Kepco {
             kepco.setUserName(listsaved.getUserName());
             kepco.setResponseId(listsaved.getId());
             kepco.setResposneAnswer(listsaved.getAnswer());
-            System.out.println(Math.random() < 0.5);
-            System.out.println(Math.random() < 0.5);
-            System.out.println(Math.random() < 0.5);
-            System.out.println(Math.random() < 0.5);
-            System.out.println(Math.random() < 0.5);
-            
+            System.out.println(Math.random() < 0.5);       
             kepco.setIsReal(Math.random() < 0.5);
             double adjustmentFactor = 0.9 + (Math.random() * 0.1);
             kepco.setAdjustPoint((int) (listsaved.getUserCapacity() * adjustmentFactor));
@@ -67,6 +62,8 @@ public class Kepco {
             reductionCheck.publishAfterCommit();
         }
     }
+
+    
     //>>> Clean Arch / Port Method
 
 }

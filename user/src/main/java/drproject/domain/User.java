@@ -45,30 +45,24 @@ public class User {
     }
 
     //<<< Clean Arch / Port Method
+
+    
     public static void changePoint(ReductionCheck reductionCheck) {
-        //implement business logic here:
 
-        /** Example 1:  new item 
-        User user = new User();
-        repository().save(user);
-
-        */
         Optional<User> userOptional = repository().findByName(reductionCheck.getUserName());
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            
             // answer가 'accept'일 때 그리고 isReal이 true일때
             if ("accept".equals(reductionCheck.getResposneAnswer()) && reductionCheck.getIsReal()) {
                 // adjustPoint 만큼 포인트를 증가
                 user.setPoint(user.getPoint() + reductionCheck.getAdjustPoint());
-
                 // 변경된 사용자 정보 저장
                 repository().save(user);
 
                 System.out.println("포인트 업데이트 " + user.getName() + user.getPoint());
             }
             else {
-                System.out.println("answer가 'accept'가 아님.");
+                System.out.println("answer가 'accept'가 아니거나 실제로 시행하지 않았음.");
             }
         } 
     }
