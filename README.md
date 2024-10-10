@@ -1,5 +1,5 @@
 # DR(전력중개) 관리 플랫폼 
-![대체 텍스트](images/domain_info.png)
+![도메인정보](images/domain_info.png)
 
 ## 도메인 설명
 - **DR 제도 설명**: 전기 사용자가 전기 사용량을 감축하고 이를 전력시장에 판매하여 금전적인 보상을 받는 제도
@@ -34,27 +34,18 @@ www.msaez.io/#/72932922/storming/drplatform
 
 # 분석/설계
 
-## AS-IS 조직 (Horizontally-Aligned)
-  ![image](https://user-images.githubusercontent.com/77129832/119316165-96ca3680-bcb1-11eb-9a91-f2b627890bab.png)
-
-## TO-BE 조직 (Vertically-Aligned)  
-  ![image](https://user-images.githubusercontent.com/77129832/119315258-a09f6a00-bcb0-11eb-9940-c2a82f2f7d09.png)
-
-
 ## Event Storming 결과
-* MSAEz 로 모델링한 이벤트스토밍 결과:  http://www.msaez.io/#/storming/QtpQtDiH1Je3wad2QxZUJVvnLzO2/share/6f36e16efdf8c872da3855fedf7f3ea9
+* MSAEz 로 모델링한 이벤트스토밍 결과:  www.msaez.io/#/72932922/storming/drplatproject
 
 
 ### 이벤트 도출
-![image](https://user-images.githubusercontent.com/15603058/119298548-337fda80-bc98-11eb-9f96-7d583d156fb9.png)
+![초기이벤트도출](images/event_storming_v1.png)
 
 
 ### 부적격 이벤트 탈락
-![image](https://user-images.githubusercontent.com/15603058/119298594-4f837c00-bc98-11eb-9f67-ec2e882e1f33.png)
+![부적격이벤트탈락](images/event_storming_v2.png)
 
     - 과정중 도출된 잘못된 도메인 이벤트들을 걸러내는 작업을 수행함
-        - 등록시>RoomSearched, 예약시>RoomSelected :  UI 의 이벤트이지, 업무적인 의미의 이벤트가 아니라서 제외
-
 ### 액터, 커맨드 부착하여 읽기 좋게
 ![image](https://user-images.githubusercontent.com/15603058/119298993-113a8c80-bc99-11eb-9bae-4b911317d810.png)
 
