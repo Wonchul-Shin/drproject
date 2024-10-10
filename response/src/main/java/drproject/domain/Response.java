@@ -93,24 +93,15 @@ public class Response {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void updateResponse(ReductionCheck reductionCheck) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        Response response = new Response();
-        repository().save(response);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        repository().findById(reductionCheck.get???()).ifPresent(response->{
-            
-            response // do something
-            repository().save(response);
-
-
-         });
-        */
+        if (!reductionCheck.getIsReal()) {
+            repository().findById(reductionCheck.getId()).ifPresent(response -> {
+                if (response.getId().equals(reductionCheck.getResponseId())) {
+                    System.out.println(response.userName + "did not execute reduction");
+                    response.setAnswer("deny");
+                    repository().save(response);
+                }
+            });
+        }
 
     }
     //>>> Clean Arch / Port Method
