@@ -259,8 +259,8 @@ kubectl apply -f service.yaml
 ![명령시작](images/code_startdr.png)
 
 #### 2 이행리스트 자동 생성 
-drId 1로 유저수만큼 response 생성 (초기값 ignore)
 ![리스트 생성](images/code_reponse_list.png)
+drId 1로 유저수만큼 response 생성 (초기값 ignore)
 
 #### 3 이행 수락 
 ![이행수락](images/code_response_accept.png)
@@ -274,7 +274,7 @@ drId 1로 유저수만큼 response 생성 (초기값 ignore)
 - point 지급 (accept를 선택하고 실제로 이행한 경우)
 - response 업데이트(accept를 선택했지만 실제로 이행하지 않은 경우)
   
-![변](images/relation_outcome.png)
+![변경내용](images/relation_outcome.png)
 
 
 
