@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dr
-          image: "kxmjhwn/dr:20241010"
+          image: "kxmjhwn/dr:latest"
           ports:
             - containerPort: 8080
           readinessProbe:

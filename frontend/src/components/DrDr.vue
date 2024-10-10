@@ -105,7 +105,7 @@ export default {
 
                 if (!this.offline) {
                     if (this.isNew) {
-                        temp = await axios.post(axios.fixUrl('/drs'), this.value)
+                        temp = await axios.post(axios.fixUrl('/drs/startdr'), this.value)
                     } else {
                         temp = await axios.put(axios.fixUrl(this.value._links.self.href), this.value)
                     }

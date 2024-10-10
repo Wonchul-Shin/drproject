@@ -1,0 +1,8 @@
+drproject/infra/PolicyHandler.class
+drproject/infra/AdminRepository.class
+drproject/domain/Admin.class
+drproject/config/kafka/KafkaProcessor.class
+drproject/infra/AdminViewHandler.class
+drproject/infra/AbstractEvent$1.class
+drproject/infra/AbstractEvent.class
+drproject/FrontendApplication.class

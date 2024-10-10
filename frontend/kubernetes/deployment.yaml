@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: "kxmjhwn/frontend:20241010"
+          image: "kxmjhwn/frontend:latest"
           ports:
             - containerPort: 8080
