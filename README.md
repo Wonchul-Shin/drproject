@@ -1,4 +1,5 @@
 # DR(전력중개) 관리 플랫폼 
+![도메인메인](https://github.com/Wonchul-Shin/drproject/blob/866edb2920c9df072bbb52622ff62f672f81969c/images/maindomain.png)
 ![도메인정보](images/domain_info.png)
 
 ## 도메인 설명
