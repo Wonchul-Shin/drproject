@@ -66,7 +66,7 @@
 
 ### 완성된 모형
 
-![완성이미](images/finished_model.png) 
+![완성이미지](images/finished_model.png) 
 
 ### 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
 1. 관리자가 DR명령을 시작/종료할 수 있다. (ok)
@@ -260,6 +260,7 @@ kubectl apply -f service.yaml
 
 #### 2 이행리스트 자동 생성 
 ![리스트 생성](images/code_reponse_list.png)
+
 drId 1로 유저수만큼 response 생성 (초기값 ignore)
 
 #### 3 이행 수락 
@@ -274,7 +275,7 @@ drId 1로 유저수만큼 response 생성 (초기값 ignore)
 - point 지급 (accept를 선택하고 실제로 이행한 경우)
 - response 업데이트(accept를 선택했지만 실제로 이행하지 않은 경우)
   
-![변경내용](images/relation_outcome.png)
+![변경내용](https://github.com/Wonchul-Shin/drproject/blob/2b7657cf2914a2035fd826a79c235912944bc5be/images/relation_outcome.PNG)
 
 
 
