@@ -256,89 +256,110 @@ Airbnb 프로젝트에서는 PolicyHandler에서 처리 시 어떤 건에 대한
 
 ## DDD 의 적용
 
-- 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였다. (예시는 room 마이크로 서비스). 이때 가능한 현업에서 사용하는 언어 (유비쿼터스 랭귀지)를 그대로 사용하려고 노력했다. 현실에서 발생가는한 이벤트에 의하여 마이크로 서비스들이 상호 작용하기 좋은 모델링으로 구현을 하였다.
+- 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였다. (예시는 DR Project의 핵심 도메인인 room 마이크로 서비스).
 
 ```
-package airbnb;
-
-import javax.persistence.*;
-import org.springframework.beans.BeanUtils;
-
 @Entity
-@Table(name="Room_table")
-public class Room {
+@Table(name = "Response_table")
+@Data
+//<<< DDD / Aggregate Root
+public class Response {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long roomId;       // 방ID
-    private String status;     // 방 상태
-    private String desc;       // 방 상세 설명
-    private Long reviewCnt;    // 리뷰 건수
-    private String lastAction; // 최종 작업
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private Long userId;
+    private String userName;
+    private String drId;
+    private String answer;
+    private Integer userCapacity;
 
-    public Long getRoomId() {
-        return roomId;
-    }
+    @PostPersist
+    public void onPostPersist() {
+        Listmade listmade = new Listmade(this);
+        listmade.publishAfterCommit();
+        
+        Listsaved listsaved = new Listsaved(this);
+        listsaved.publishAfterCommit();
 
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
-    }
-    public String getStatus() {
-        return status;
-    }
+        if ("accept".equals(this.answer)) {
+            AcceptChosen acceptChosen = new AcceptChosen(this);
+            acceptChosen.publishAfterCommit();
+        }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-    public Long getReviewCnt() {
-        return reviewCnt;
+        if ("deny".equals(this.answer)) {
+            DenyChosen denyChosen = new DenyChosen(this);
+            denyChosen.publishAfterCommit();       
+         }
     }
 
-    public void setReviewCnt(Long reviewCnt) {
-        this.reviewCnt = reviewCnt;
-    }
-    public String getLastAction() {
-        return lastAction;
+    public static ResponseRepository repository() {
+        ResponseRepository responseRepository = ResponseApplication.applicationContext.getBean(
+            ResponseRepository.class
+        );
+        return responseRepository;
     }
 
-    public void setLastAction(String lastAction) {
-        this.lastAction = lastAction;
+    public static void makelist(DRstarted dRstarted) {
+        PagedModel<User> users = ResponseApplication.applicationContext
+        .getBean(drproject.external.UserService.class)
+        .getAllUsers();
+            for (User user :  users.getContent()) {
+                Response response = new Response();
+                response.setDrId(String.valueOf(dRstarted.getId())); 
+                response.setUserId(user.getId());
+                response.setUserName(user.getName());
+                response.setUserCapacity(user.getCapacity()); 
+                response.setAnswer("ignore");     
+                repository().save(response);
+            }
     }
+
+    public static void savelist(DrEnded drEnded) {
+        List<Response> responses = repository().findByDrId(String.valueOf(drEnded.getId()));
+        for (Response response : responses) {
+            Listsaved listsaved = new Listsaved(response);
+            listsaved.publishAfterCommit(); 
+        }
+    }
+    public static void updateResponse(ReductionCheck reductionCheck) {
+        if (!reductionCheck.getIsReal()) {
+            repository().findById(reductionCheck.getId()).ifPresent(response -> {
+                if (response.getId().equals(reductionCheck.getResponseId())) {
+                    System.out.println(response.userName + "did not execute reduction");
+                    response.setAnswer("deny");
+                    repository().save(response);
+                }
+            });
+        }
+    }
+
 }
 
 ```
 - Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
 ```
-package airbnb;
+package drproject;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@RepositoryRestResource(collectionResourceRel="rooms", path="rooms")
-public interface RoomRepository extends PagingAndSortingRepository<Room, Long>{
-
+@RepositoryRestResource(collectionResourceRel="responses", path="responses")
+public interface ResponseRepository extends PagingAndSortingRepository<Response, Long> {
 }
 ```
 - 적용 후 REST API 의 테스트
 ```
-# room 서비스의 room 등록
-http POST http://localhost:8088/rooms desc="Beautiful House"  
-
 # reservation 서비스의 예약 요청
-http POST http://localhost:8088/reservations roomId=1 status=reqReserve
+http POST :8082/startdr name="kt" type="reliable" status="running" date="2024-10-08"
+ - startdr이 실행되면 resposne가 각 user 별 하나의 response가 만들어진다 (초기값 ignore)
 
-# reservation 서비스의 예약 상태 확인
-http GET http://localhost:8088/reservations
+# response에 대한 승인처리 
+http PUT :8083/responses/2/accept
 
+# response 확인
+http :8083/responses
 ```
-
 ## 동기식 호출(Sync) 과 Fallback 처리
 
 분석 단계에서의 조건 중 하나로 예약 시 숙소(room) 간의 예약 가능 상태 확인 호출은 동기식 일관성을 유지하는 트랜잭션으로 처리하기로 하였다. 호출 프로토콜은 이미 앞서 Rest Repository 에 의해 노출되어있는 REST 서비스를 FeignClient 를 이용하여 호출하도록 한다. 또한 예약(reservation) -> 결제(payment) 서비스도 동기식으로 처리하기로 하였다.
