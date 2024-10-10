@@ -274,7 +274,7 @@ drId 1로 유저수만큼 response 생성 (초기값 ignore)
 - point 지급 (accept를 선택하고 실제로 이행한 경우)
 - response 업데이트(accept를 선택했지만 실제로 이행하지 않은 경우)
   
-![명령시작](images/realtion_outcome.png)
+![변](images/relation_outcome.png)
 
 
 
