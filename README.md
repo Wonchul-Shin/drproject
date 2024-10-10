@@ -66,7 +66,7 @@
 
 ### 완성된 모형
 
-![폴리시부착](images/finished_model.png) 
+![완성이미](images/finished_model.png) 
 
 ### 완성본에 대한 기능적/비기능적 요구사항을 커버하는지 검증
 1. 관리자가 DR명령을 시작/종료할 수 있다. (ok)
