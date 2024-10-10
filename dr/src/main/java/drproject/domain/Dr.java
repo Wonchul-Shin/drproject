@@ -23,9 +23,9 @@ public class Dr {
 
     private String type;
 
-    private String status;
+    private String status = "running";
 
-    private Date date;
+    private Date date = new Date();
 
     @PostPersist
     public void onPostPersist() {
