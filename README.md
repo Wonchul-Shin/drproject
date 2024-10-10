@@ -196,22 +196,6 @@ server:
 
 ```
 
-
-## CI/CD 설정
-
-아래 이미지는 azure의 pipeline에 각각의 서비스들을 올려, 코드가 업데이트 될때마다 자동으로 빌드/배포 하도록 하였다.
-![docker hub](images/docker_hub.png)
-
-그 결과 kubernetes cluster에 아래와 같이 서비스가 올라가있는 것을 확인할 수 있다.
-![cluster](images/kubectl_get_pods.png)
-![cluster](images/kubectl_get_svc.png)
-
-
-먼저, 임의의 사용자를 등록한다.
-![cluster](images/users_add_1.png)
-![cluster](images/users_add_2.png)
-
-
 ## DDD 의 적용
 
 - 각 서비스내에 도출된 핵심 Aggregate Root 객체를 Entity 로 선언하였다. (예시는 DR Project의 핵심 도메인인 room 마이크로 서비스).
@@ -507,47 +491,17 @@ http GET localhost:8088/reservations    #메시지 서비스와 상관없이 예
 
 ## CI/CD 설정
 
-각 구현체들은 각자의 source repository 에 구성되었고, 사용한 CI/CD는 buildspec.yml을 이용한 AWS codebuild를 사용하였습니다.
+아래 이미지는 azure의 pipeline에 각각의 서비스들을 올려, 코드가 업데이트 될때마다 자동으로 빌드/배포 하도록 하였다.
+![docker hub](images/docker_hub.png)
 
-- CodeBuild 프로젝트를 생성하고 AWS_ACCOUNT_ID, KUBE_URL, KUBE_TOKEN 환경 변수 세팅을 한다
-```
-SA 생성
-kubectl apply -f eks-admin-service-account.yml
-```
-![codebuild(sa)](https://user-images.githubusercontent.com/38099203/119293259-ff52ec80-bc8c-11eb-8671-b9a226811762.PNG)
-```
-Role 생성
-kubectl apply -f eks-admin-cluster-role-binding.yml
-```
-![codebuild(role)](https://user-images.githubusercontent.com/38099203/119293300-1abdf780-bc8d-11eb-9b07-ad173237efb1.PNG)
-```
-Token 확인
-kubectl -n kube-system get secret
-kubectl -n kube-system describe secret eks-admin-token-rjpmq
-```
-![codebuild(token)](https://user-images.githubusercontent.com/38099203/119293511-84d69c80-bc8d-11eb-99c7-e8929e6a41e4.PNG)
-```
-buildspec.yml 파일 
-마이크로 서비스 room의 yml 파일 이용하도록 세팅
-```
-![codebuild(buildspec)](https://user-images.githubusercontent.com/38099203/119283849-30292680-bc79-11eb-9f86-cbb715e74846.PNG)
-
-- codebuild 실행
-```
-codebuild 프로젝트 및 빌드 이력
-```
-![codebuild(프로젝트)](https://user-images.githubusercontent.com/38099203/119283851-315a5380-bc79-11eb-9b2a-b4522d22d009.PNG)
-![codebuild(로그)](https://user-images.githubusercontent.com/38099203/119283850-30c1bd00-bc79-11eb-9547-1ff1f62e48a4.PNG)
-
-- codebuild 빌드 내역 (Message 서비스 세부)
-
-![image](https://user-images.githubusercontent.com/31723044/119385500-2b0fba00-bd01-11eb-861b-cc31910ff945.png)
-
-- codebuild 빌드 내역 (전체 이력 조회)
-
-![image](https://user-images.githubusercontent.com/31723044/119385401-087da100-bd01-11eb-8b69-ce222e6bb71e.png)
+그 결과 kubernetes cluster에 아래와 같이 서비스가 올라가있는 것을 확인할 수 있다.
+![cluster](images/kubectl_get_pods.png)
+![cluster](images/kubectl_get_svc.png)
 
 
+먼저, 임의의 사용자를 등록한다.
+![cluster](images/users_add_1.png)
+![cluster](images/users_add_2.png)
 
 
 ## 동기식 호출 / 서킷 브레이킹 / 장애격리
