@@ -14,8 +14,8 @@ public class DRstarted extends AbstractEvent {
     private Long id;
     private String name;
     private String type;
-    private String status;
-    private Date date;
+    private String status = "running";
+    private Date date = new Date();
 
     public DRstarted(Dr aggregate) {
         super(aggregate);

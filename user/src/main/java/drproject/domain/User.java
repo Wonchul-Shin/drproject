@@ -57,8 +57,8 @@ public class User {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             
-            // answer가 'accept'일 때만 포인트 조정
-            if ("accept".equals(reductionCheck.getResposneAnswer())) {
+            // answer가 'accept'일 때 그리고 isReal이 true일때
+            if ("accept".equals(reductionCheck.getResposneAnswer()) && reductionCheck.getIsReal()) {
                 // adjustPoint 만큼 포인트를 증가
                 user.setPoint(user.getPoint() + reductionCheck.getAdjustPoint());
 

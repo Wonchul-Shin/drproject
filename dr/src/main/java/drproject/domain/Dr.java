@@ -38,9 +38,10 @@ public class Dr {
         System.out.println("DR START");
 
         DRstarted dRstarted = new DRstarted(this);
+        
         if (this.date == null) {
-            this.date = new Date(); // 현재 날짜를 기본값으로 설정
-        }       
+            this.date = new Date();
+        }   
         dRstarted.publishAfterCommit();
     }
 
