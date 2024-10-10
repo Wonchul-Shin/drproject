@@ -1,0 +1,7 @@
+/workspace/drproject/frontend/src/main/java/drproject/FrontendApplication.java
+/workspace/drproject/frontend/src/main/java/drproject/config/kafka/KafkaProcessor.java
+/workspace/drproject/frontend/src/main/java/drproject/infra/AdminViewHandler.java
+/workspace/drproject/frontend/src/main/java/drproject/infra/AdminRepository.java
+/workspace/drproject/frontend/src/main/java/drproject/domain/Admin.java
+/workspace/drproject/frontend/src/main/java/drproject/infra/PolicyHandler.java
+/workspace/drproject/frontend/src/main/java/drproject/infra/AbstractEvent.java

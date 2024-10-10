@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kepco
-          image: "username/kepco:latest"
+          image: "kxmjhwn/kepco:241010"
           ports:
             - containerPort: 8080
           readinessProbe:

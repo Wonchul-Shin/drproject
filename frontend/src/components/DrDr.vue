@@ -144,7 +144,7 @@ export default {
                     // await axios.delete(axios.fixUrl(this.value._links.self.href))
                     await axios.put(axios.fixUrl(this.value._links.self.href), {
                         ...this.value,
-                        status: 'end'  // status를 'end'로 설정
+                        status: 'end'  
                     });
                 }
 
