@@ -80,178 +80,136 @@
 - 결제 완료시 Host 연결 및 예약처리:  reservation 에서 room 마이크로서비스로 예약요청이 전달되는 과정에 있어서 room 마이크로 서비스가 별도의 배포주기를 가지기 때문에 Eventual Consistency 방식으로 트랜잭션 처리함.
 - 나머지 모든 inter-microservice 트랜잭션: 예약상태, 후기처리 등 모든 이벤트에 대해 데이터 일관성의 시점이 크리티컬하지 않은 모든 경우가 대부분이라 판단, Eventual Consistency 를 기본으로 채택함.
 
-
 # 구현:
 
-분석/설계 단계에서 도출된 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
+분석/설계 단계에서 도출된 헥사고날 아키텍처에 따라, 각 BC별로 대변되는 마이크로 서비스들을 스프링부트로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
 
 ```
-   mvn spring-boot:run
+	cd dr
+	mvn spring-boot:run
+	
+	cd frontend
+	mvn spring-boot:run 
+	
+	cd gateway
+	mvn spring-boot:run  
+	
+	cd kepco
+	mvn spring-boot:run
+	
+	cd response
+	mvn spring-boot:run
+
+	cd user
+	mvn spring-boot:run
 ```
-
-## CQRS
-
-숙소(Room) 의 사용가능 여부, 리뷰 및 예약/결재 등 총 Status 에 대하여 고객(Customer)이 조회 할 수 있도록 CQRS 로 구현하였다.
-- room, review, reservation, payment 개별 Aggregate Status 를 통합 조회하여 성능 Issue 를 사전에 예방할 수 있다.
-- 비동기식으로 처리되어 발행된 이벤트 기반 Kafka 를 통해 수신/처리 되어 별도 Table 에 관리한다
-- Table 모델링 (ROOMVIEW)
-
-  ![image](https://user-images.githubusercontent.com/77129832/119319352-4b198c00-bcb5-11eb-93bc-ff0657feeb9f.png)
-- viewpage MSA ViewHandler 를 통해 구현 ("RoomRegistered" 이벤트 발생 시, Pub/Sub 기반으로 별도 Roomview 테이블에 저장)
-  ![image](https://user-images.githubusercontent.com/77129832/119321162-4d7ce580-bcb7-11eb-9030-29ee6272c40d.png)
-  ![image](https://user-images.githubusercontent.com/31723044/119350185-fccab400-bcd9-11eb-8269-61868de41cc7.png)
-- 실제로 view 페이지를 조회해 보면 모든 room에 대한 전반적인 예약 상태, 결제 상태, 리뷰 건수 등의 정보를 종합적으로 알 수 있다
-  ![image](https://user-images.githubusercontent.com/31723044/119357063-1b34ad80-bce2-11eb-94fb-a587261ab56f.png)
-
 
 ## API 게이트웨이
-      1. gateway 스프링부트 App을 추가 후 application.yaml내에 각 마이크로 서비스의 routes 를 추가하고 gateway 서버의 포트를 8080 으로 설정함
-       
-          - application.yaml 예시
-            ```
-            spring:
-              profiles: docker
-              cloud:
-                gateway:
-                  routes:
-                    - id: payment
-                      uri: http://payment:8080
-                      predicates:
-                        - Path=/payments/** 
-                    - id: room
-                      uri: http://room:8080
-                      predicates:
-                        - Path=/rooms/**, /reviews/**, /check/**
-                    - id: reservation
-                      uri: http://reservation:8080
-                      predicates:
-                        - Path=/reservations/**
-                    - id: message
-                      uri: http://message:8080
-                      predicates:
-                        - Path=/messages/** 
-                    - id: viewpage
-                      uri: http://viewpage:8080
-                      predicates:
-                        - Path= /roomviews/**
-                  globalcors:
-                    corsConfigurations:
-                      '[/**]':
-                        allowedOrigins:
-                          - "*"
-                        allowedMethods:
-                          - "*"
-                        allowedHeaders:
-                          - "*"
-                        allowCredentials: true
+Local 테스트 환경에서는 localhost:8080에서 Gateway API 가 작동.
+Cloud 환경에서는 http://20.249.203.195:8080/ 에서 Gateway API가 작동.
+application.yml 파일에 프로파일 별로 Gateway 설정.
+```
+server:
+  port: 8088
 
-            server:
-              port: 8080            
-            ```
+---
 
-         
-      2. Kubernetes용 Deployment.yaml 을 작성하고 Kubernetes에 Deploy를 생성함
-          - Deployment.yaml 예시
-          
+spring:
+  profiles: default
+  cloud:
+    gateway:
+#<<< API Gateway / Routes
+      routes:
+        - id: dr
+          uri: http://localhost:8082
+          predicates:
+            - Path=/drs/**, 
+        - id: response
+          uri: http://localhost:8083
+          predicates:
+            - Path=/responses/**, 
+        - id: user
+          uri: http://localhost:8084
+          predicates:
+            - Path=/users/**, 
+        - id: kepco
+          uri: http://localhost:8085
+          predicates:
+            - Path=/kepcos/**, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+#>>> API Gateway / Routes
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
 
-            ```
-            apiVersion: apps/v1
-            kind: Deployment
-            metadata:
-              name: gateway
-              namespace: airbnb
-              labels:
-                app: gateway
-            spec:
-              replicas: 1
-              selector:
-                matchLabels:
-                  app: gateway
-              template:
-                metadata:
-                  labels:
-                    app: gateway
-                spec:
-                  containers:
-                    - name: gateway
-                      image: 247785678011.dkr.ecr.us-east-2.amazonaws.com/gateway:1.0
-                      ports:
-                        - containerPort: 8080
-            ```               
-            
 
-            ```
-            Deploy 생성
-            kubectl apply -f deployment.yaml
-            ```     
-          - Kubernetes에 생성된 Deploy. 확인
-            
-![image](https://user-images.githubusercontent.com/80744273/119321943-1d821200-bcb8-11eb-98d7-bf8def9ebf80.png)
-	    
-            
-      3. Kubernetes용 Service.yaml을 작성하고 Kubernetes에 Service/LoadBalancer을 생성하여 Gateway 엔드포인트를 확인함. 
-          - Service.yaml 예시
-          
-            ```
-            apiVersion: v1
-              kind: Service
-              metadata:
-                name: gateway
-                namespace: airbnb
-                labels:
-                  app: gateway
-              spec:
-                ports:
-                  - port: 8080
-                    targetPort: 8080
-                selector:
-                  app: gateway
-                type:
-                  LoadBalancer           
-            ```             
+---
 
-           
-            ```
-            Service 생성
-            kubectl apply -f service.yaml            
-            ```             
-            
-            
-          - API Gateay 엔드포인트 확인
-           
-            ```
-            Service  및 엔드포인트 확인 
-            kubectl get svc -n airbnb           
-            ```                 
-![image](https://user-images.githubusercontent.com/80744273/119318358-2a046b80-bcb4-11eb-9d46-ef2d498c2cff.png)
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: dr
+          uri: http://dr:8080
+          predicates:
+            - Path=/drs/**, 
+        - id: response
+          uri: http://response:8080
+          predicates:
+            - Path=/responses/**, 
+        - id: user
+          uri: http://user:8080
+          predicates:
+            - Path=/users/**, 
+        - id: kepco
+          uri: http://kepco:8080
+          predicates:
+            - Path=/kepcos/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
 
-# Correlation
+server:
+  port: 8080
 
-Airbnb 프로젝트에서는 PolicyHandler에서 처리 시 어떤 건에 대한 처리인지를 구별하기 위한 Correlation-key 구현을 
-이벤트 클래스 안의 변수로 전달받아 서비스간 연관된 처리를 정확하게 구현하고 있습니다. 
+```
 
-아래의 구현 예제를 보면
 
-예약(Reservation)을 하면 동시에 연관된 방(Room), 결제(Payment) 등의 서비스의 상태가 적당하게 변경이 되고,
-예약건의 취소를 수행하면 다시 연관된 방(Room), 결제(Payment) 등의 서비스의 상태값 등의 데이터가 적당한 상태로 변경되는 것을
-확인할 수 있습니다.
+## CI/CD 설정
 
-예약등록
-![image](https://user-images.githubusercontent.com/31723044/119320227-54572880-bcb6-11eb-973b-a9a5cd1f7e21.png)
-예약 후 - 방 상태
-![image](https://user-images.githubusercontent.com/31723044/119320300-689b2580-bcb6-11eb-933e-98be5aadca61.png)
-예약 후 - 예약 상태
-![image](https://user-images.githubusercontent.com/31723044/119320390-810b4000-bcb6-11eb-8c62-48f6765c570a.png)
-예약 후 - 결제 상태
-![image](https://user-images.githubusercontent.com/31723044/119320524-a39d5900-bcb6-11eb-864b-173711eb9e94.png)
-예약 취소
-![image](https://user-images.githubusercontent.com/31723044/119320595-b6b02900-bcb6-11eb-8d8d-0d5c59603c72.png)
-취소 후 - 방 상태
-![image](https://user-images.githubusercontent.com/31723044/119320680-ccbde980-bcb6-11eb-8b7c-66315329aafe.png)
-취소 후 - 예약 상태
-![image](https://user-images.githubusercontent.com/31723044/119320747-dcd5c900-bcb6-11eb-9c44-fd3781c7c55f.png)
-취소 후 - 결제 상태
-![image](https://user-images.githubusercontent.com/31723044/119320806-ee1ed580-bcb6-11eb-8ccf-8c81385cc8ba.png)
+아래 이미지는 azure의 pipeline에 각각의 서비스들을 올려, 코드가 업데이트 될때마다 자동으로 빌드/배포 하도록 하였다.
+![docker hub](images/docker_hub.png)
+
+그 결과 kubernetes cluster에 아래와 같이 서비스가 올라가있는 것을 확인할 수 있다.
+![cluster](images/kubectl_get_pods.png)
+![cluster](images/kubectl_get_svc.png)
+
+
+먼저, 임의의 사용자를 등록한다.
+![cluster](images/users_add_1.png)
+![cluster](images/users_add_2.png)
 
 
 ## DDD 의 적용
