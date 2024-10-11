@@ -492,3 +492,37 @@ response 서비스에 대한 replica 를 동적으로 늘려주도록 설정.
 ```
 kubectl autoscale deploy response --min=1 --max=10 --cpu-percent=15
 ```
+## 동기식 호출
+### 동기식 호출 흐름 
+#### 1. FeignClient 설정
+getAllUsers()는 @GetMapping("/users") 어노테이션을 통해 user 서비스의 /users 엔드포인트에 GET 요청을 전송
+```
+@FeignClient(name = "user", url = "${api.url.user}")
+public interface UserService {
+    @GetMapping("/users")
+    PagedModel<User> getAllUsers();
+}
+```
+#### 2. 동기적 호출 발생
+Response 클래스의 makelist 메서드에서, FeignClient를 사용해 사용자 목록을 동기적으로 가져옴
+```
+PagedModel<User> users = ResponseApplication.applicationContext
+    .getBean(drproject.external.UserService.class)
+    .getAllUsers();
+
+```
+#### 3. 데이터 처리 
+져온 사용자 데이터는 for 문을 통해 반복 처리되며, 각각의 사용자 정보를 기반으로 Response 객체가 생성됨
+```
+for (User user :  users.getContent()) {
+    Response response = new Response();
+    response.setDrId(String.valueOf(dRstarted.getId())); 
+    response.setUserId(user.getId());
+    response.setUserName(user.getName());
+    response.setUserCapacity(user.getCapacity()); 
+    response.setAnswer("ignore");     
+    repository().save(response);
+}
+```
+
+
