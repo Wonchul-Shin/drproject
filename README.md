@@ -16,14 +16,17 @@
 [www.msaez.io/#/72932922/storming/drproject
 ](https://www.msaez.io/#/72932922/storming/drproject)
 
+### Github Link
+[https://github.com/Wonchul-Shin/drproject](https://github.com/Wonchul-Shin/drproject)
+
 # 서비스 시나리오
 
 ### DR플랫폼
 
 #### 기능적 요구사항 
 1. 관리자가 DR명령을 시작/종료할 수 있다.
-2. 고객이 현재 진행중인 멸영에 대하여 이행/불이행을 선택한다.
-3. 고나리자는 실행중인 명령을 종료한다.
+2. 고객이 현재 진행중인 명령에 대하여 이행(accept)/불이행(deny)를 선택한다.
+3. 관리자는 실행중인 명령을 종료한다.
 4. 명령이 종료되었을 때 한전에 전력사용량을 확인하고 실제 감축량만큼 유저의 포인트를 늘린다.
 
 #### 비기능적 요구사항
