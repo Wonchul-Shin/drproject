@@ -28,6 +28,7 @@
 2. 고객이 현재 진행중인 명령에 대하여 이행(accept)/불이행(deny)를 선택한다.
 3. 관리자는 실행중인 명령을 종료한다.
 4. 명령이 종료되었을 때 한전에 전력사용량을 확인하고 실제 감축량만큼 유저의 포인트를 늘린다.
+5. 유저가 이행을 선택했지만 실제로 감축에 이행하지 않은 경우 유저의 이행을 accept에서 deny로 수정한다. 
 
 #### 비기능적 요구사항
 1. 장애격리
@@ -77,6 +78,8 @@
 2. 고객이 현재 진행중인 멸영에 대하여 이행/불이행을 선택한다. (ok)
 3. 관리자는 실행중인 명령을 종료한다. (ok)
 4. 명령이 종료되었을 때 한전에 전력사용량을 확인하고 실제 감축량만큼 유저의 포인트를 늘린다. (ok)
+5. 유저가 이행을 선택했지만 실제로 감축에 이행하지 않은 경우 유저의 이행을 accept에서 deny로 수정한다. (ok)
+
 
 # 구현:
 
@@ -276,8 +279,26 @@ kubectl apply -f service.yaml
   
 ![변경내용](https://github.com/Wonchul-Shin/drproject/blob/2b7657cf2914a2035fd826a79c235912944bc5be/images/relation_outcome.PNG)
 
-
-
+### *참조 kepco 로직
+실제 이행여부와 전력 감축량을 계산하고 포인트를 계산하는 로직은 다음과 같음 
+```
+ public static void checkReduction(Listsaved listsaved) {
+        if ("accept".equals(listsaved.getAnswer())) { // accept를 선택한 경우에만 구동
+            Kepco kepco = new Kepco();
+            kepco.setDrId(Long.parseLong(listsaved.getDrId()));
+            kepco.setUserId(listsaved.getUserId());
+            kepco.setUserName(listsaved.getUserName());
+            kepco.setResponseId(listsaved.getId());
+            kepco.setResposneAnswer(listsaved.getAnswer());
+            kepco.setIsReal(Math.random() < 0.5); // 50% 확률로 미이행 
+            double adjustmentFactor = 0.9 + (Math.random() * 0.1); // 최대 감축량 (user.capcity)대비 90%~100% 값이 포인트로 치환 
+            kepco.setAdjustPoint((int) (listsaved.getUserCapacity() * adjustmentFactor));
+            repository().save(kepco);
+            ReductionCheck reductionCheck = new ReductionCheck(kepco);
+            reductionCheck.publishAfterCommit();
+        }
+    }
+```
 
 ## DDD 의 적용
 
