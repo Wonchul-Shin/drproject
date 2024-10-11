@@ -524,5 +524,19 @@ for (User user :  users.getContent()) {
     repository().save(response);
 }
 ```
-
-
+## Self-healing (Liveness Probe)
+#### 설정
+```
+livenessProbe:
+  httpGet:
+    path: '/actuator/health'
+    port: 8080
+  initialDelaySeconds: 120
+  timeoutSeconds: 2
+  periodSeconds: 5
+  failureThreshold: 5
+```
+- initialDelaySeconds: 120: 컨테이너가 시작된 후, 120초 뒤에 처음으로 livenessProbe가 실행
+- timeoutSeconds: 2:actuator/health 경로로의 요청이 2초 안에 응답하지 않으면 비정상으로 판단
+- periodSeconds: 5: Liveness Probe가 주기적으로 실행되는 간격, 즉, 5초마다 /actuator/health 경로로 HTTP GET 요청을 보내어 애플리케이션의 상태를 확인
+- failureThreshold: 5:Liveness Probe가 5번 연속 실패하면, Kubernetes는 해당 컨테이너를 비정상 상태로 간주하고 재시작
