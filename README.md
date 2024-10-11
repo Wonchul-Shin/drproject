@@ -489,9 +489,16 @@ kubernetes cluster에 아래와 같이 서비스가 올라가있는 것을 확�
 ## 오토스케일 아웃
 새로운 dr이 생성될때마다 사용자 수만큼의 response가 생성되므로 이에 대응하기 위해 오토스케일 아웃 적용.
 response 서비스에 대한 replica 를 동적으로 늘려주도록 설정.
-```
-kubectl autoscale deploy response --min=1 --max=10 --cpu-percent=15
-```
+
+빠른 테스트를 위해 부하 10% 기준으로 오토스케일 아웃 생성
+![autoscaleout](images/autoscale_in.png)
+
+siege 생성 및 실행
+![autoscaleout](images/autoscale_siege.png)
+
+결과 확인
+![autoscaleout](images/autoscale_result.png)
+
 ## 동기식 호출
 ### 동기식 호출 흐름 
 #### 1. FeignClient 설정
